@@ -25,6 +25,14 @@ def pruefeObDateiExistiert(filename):
         print('pruefeObDateiExistiert: Datei existiert nicht.')
         return 1
 
+def pruefeObVerzeichnisExistiert(dir):
+    if os.path.isdir(dir):
+        print('pruefeObVerzeichnisExistiert: Verzeichnis existiert.')
+        return 0
+    else:
+        print('pruefeObVerzeichnisExistiert: Verzeichnis existiert nicht.')
+        return 1
+
 
 def oefnePDF(filename):
 
@@ -35,12 +43,19 @@ def oefnePDF(filename):
         subprocess.call([opener, filename])
 
 
-def waehleEinPDF():
+def waehleEinPDF(workDir = None):
 
     app = QApplication(sys.argv)
-    filename, _ = QFileDialog.getOpenFileName(filter="PDF (*.pdf)")
 
-    return str(filename)
+    if workDir == None:
+        filename, _ = QFileDialog.getOpenFileName(filter="PDF (*.pdf)")
+    else:
+        if pruefeObVerzeichnisExistiert(workDir) == 1:  # Verzeichnis existiert nicht
+            filename, _ = QFileDialog.getOpenFileName(filter="PDF (*.pdf)")
+        else:
+            filename, _ = QFileDialog.getOpenFileName(filter="PDF (*.pdf)", directory=workDir)
+
+    return filename
 
 if __name__ == "__main__":
 
